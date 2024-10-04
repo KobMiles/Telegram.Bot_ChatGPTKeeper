@@ -17,12 +17,15 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
     {
         public readonly TelegramBotClient Bot;
 
-        private const string OccupyChatGpt = "Occupy ChatGPT";
-        private const string ReleaseChatGpt = "Release ChatGPT";
+        public readonly ChatSession ChatSession;
+
+        public const string OccupyChatGptButtonText = "Occupy ChatGPT";
+        public const string ReleaseChatGptButtonText = "Release ChatGPT";
 
         public HostBot(string apikey)
         {
             Bot = new TelegramBotClient(apikey);
+            ChatSession = new ChatSession(Bot);
         }
 
         public void Start()
@@ -42,9 +45,22 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
             if (update is { CallbackQuery: { } query })
             {
                 await Bot.AnswerCallbackQueryAsync(query.Id, $"You picked {query.Data}");
-                ChatSession.StartSession(query.From.ToString());
+
+                //await Bot.SendTextMessageAsync(query.Message!.Chat, $"User {query.From} clicked on {query.Data}.\n", 
+                //    replyMarkup: new InlineKeyboardMarkup().AddButtons(OccupyChatGptButtonText, ReleaseChatGptButtonText));
+                    ;
                 Console.WriteLine($"\n\tUser {query.From} clicked on {query.Data}\n");
-                await Bot.SendTextMessageAsync(query.Message!.Chat, $"User {query.From} clicked on {query.Data}.\n{ChatSession.IsFree}");
+
+                if (query.Data == OccupyChatGptButtonText)
+                {
+                    await ChatSession.StartSession(query);
+                }
+
+                else if (query.Data == ReleaseChatGptButtonText)
+                {
+                    await ChatSession.StopSession(query);
+                }
+                await Bot.DeleteMessageAsync(query.Message!.Chat, query.Message.MessageId - 2);
             }
             await Task.CompletedTask;
             Console.WriteLine("End UpdateHandler()");
@@ -65,10 +81,11 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 
             Console.WriteLine($"\n \t New Message from {msg?.From?.Username ?? "Unknown user"}:" +
                               $" {msg?.Text ?? "Not a text."}\n");
+
             if (msg?.Text == "/start")
             {
                 await Bot.SendTextMessageAsync(msg.Chat, $"Welcome in ChatGPT Keeper!\nDeveloper is: @miles_ss.\n ChatGPT free: {ChatSession.IsFree} Choose:",
-                    replyMarkup: new InlineKeyboardMarkup().AddButtons(OccupyChatGpt, ReleaseChatGpt));
+                    replyMarkup: new InlineKeyboardMarkup().AddButtons(OccupyChatGptButtonText, ReleaseChatGptButtonText));
             }
             
             Console.WriteLine("End OnMessage() in Host");
