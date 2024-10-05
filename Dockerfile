@@ -12,8 +12,8 @@ COPY ./20241003_TelegramBot_ChatGPTKeeper ./20241003_TelegramBot_ChatGPTKeeper
 WORKDIR /app/20241003_TelegramBot_ChatGPTKeeper
 RUN dotnet publish -c Release -o out
 
-# Используем минимальный образ .NET Runtime 8.0 для запуска
-FROM mcr.microsoft.com/dotnet/runtime:8.0
+# Используем минимальный образ ASP.NET Core Runtime 8.0 для запуска приложения
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build-env /app/20241003_TelegramBot_ChatGPTKeeper/out .
 
