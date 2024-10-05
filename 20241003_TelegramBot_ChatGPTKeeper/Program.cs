@@ -1,29 +1,35 @@
 ﻿using Telegram.Bot;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace _20241003_TelegramBot_ChatGPTKeeper
 {
     internal class Program
     {
-        public static HostBot? ChatGptBot;
-
+        public static readonly HostBot ChatGptBot = new HostBot("7653275610:AAGsG2rxUAc0IfLcNgn-W0K9Qw6fw_cbOC0");
         static void Main()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            // Читаем API токен из переменной окружения
-            string? botToken = Environment.GetEnvironmentVariable("TELEGRAM_BOT_TOKEN");
-            if (string.IsNullOrEmpty(botToken))
-            {
-                Console.WriteLine("Error: TELEGRAM_BOT_TOKEN environment variable is not set.");
-                return; // Останавливаем программу, если токен не задан
-            }
-
-            // Инициализируем бота с API токеном
-            ChatGptBot = new HostBot(botToken);
             ChatGptBot.Start();
 
-            Console.WriteLine("Bot is running. Press Enter to stop...");
-            Console.ReadLine(); // Ждем ввода для завершения программы
+            Console.WriteLine("Bot stop after enter:");
+            Console.ReadLine();
+            Console.WriteLine("Bot stop after enter:");
+            Console.ReadLine();
+            Console.WriteLine("Bot stop after enter:");
+            Console.ReadLine();
+            Console.WriteLine("Bot stop after enter:");
+            Console.ReadLine();
+            Console.WriteLine("Bot stop after enter:");
+            Console.ReadLine();
+            Console.WriteLine("Bot stop after enter:");
+            Console.ReadLine();
+            Console.WriteLine("Bot stop after enter:");
+            Console.ReadLine();
+            Console.WriteLine("Bot stop after enter:");
+            Console.ReadLine();
         }
     }
 }
