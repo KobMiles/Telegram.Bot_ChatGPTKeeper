@@ -4,7 +4,8 @@ WORKDIR /app
 
 # Копируем CSPROJ и восстанавливаем зависимости
 COPY 20241003_TelegramBot_ChatGPTKeeper/20241003_TelegramBot_ChatGPTKeeper.csproj ./20241003_TelegramBot_ChatGPTKeeper/
-RUN dotnet restore ./20241003_TelegramBot_ChatGPTKeeper/20241003_TelegramBot_ChatGPTKeeper.csproj
+COPY NuGet.Config ./
+RUN dotnet restore ./20241003_TelegramBot_ChatGPTKeeper/20241003_TelegramBot_ChatGPTKeeper.csproj --configfile ./NuGet.Config
 
 # Копируем остальные файлы проекта и билдим приложение
 COPY ./20241003_TelegramBot_ChatGPTKeeper ./20241003_TelegramBot_ChatGPTKeeper
