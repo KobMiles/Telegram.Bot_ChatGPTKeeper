@@ -1,5 +1,5 @@
-# Используем официальный образ .NET SDK для сборки приложения
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
+# Используем официальный образ .NET SDK 8.0 для сборки приложения
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /app
 
 # Копируем CSPROJ и восстанавливаем зависимости
@@ -11,8 +11,8 @@ COPY ./20241003_TelegramBot_ChatGPTKeeper ./20241003_TelegramBot_ChatGPTKeeper
 WORKDIR /app/20241003_TelegramBot_ChatGPTKeeper
 RUN dotnet publish -c Release -o out
 
-# Используем минимальный образ для запуска
-FROM mcr.microsoft.com/dotnet/runtime:6.0
+# Используем минимальный образ .NET Runtime 8.0 для запуска
+FROM mcr.microsoft.com/dotnet/runtime:8.0
 WORKDIR /app
 COPY --from=build-env /app/20241003_TelegramBot_ChatGPTKeeper/out .
 
