@@ -10,6 +10,8 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         public static readonly HostBot ChatGptBot = new HostBot("7653275610:AAGsG2rxUAc0IfLcNgn-W0K9Qw6fw_cbOC0");
         static void Main()
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
             ChatGptBot.Start();
 
             Console.WriteLine("Bot stop after enter:");
