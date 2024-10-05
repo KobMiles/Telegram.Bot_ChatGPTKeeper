@@ -9,7 +9,7 @@ using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups; // Add this using directive
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace _20241003_TelegramBot_ChatGPTKeeper
 {
@@ -18,9 +18,6 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         public readonly TelegramBotClient Bot;
 
         public readonly ChatSession ChatSession;
-
-        public const string OccupyChatGptButtonText = "Occupy ChatGPT";
-        public const string ReleaseChatGptButtonText = "Release ChatGPT";
 
         public HostBot(string apikey)
         {
@@ -46,21 +43,17 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
             {
                 await Bot.AnswerCallbackQueryAsync(query.Id, $"You picked {query.Data}");
 
-                //await Bot.SendTextMessageAsync(query.Message!.Chat, $"User {query.From} clicked on {query.Data}.\n", 
-                //    replyMarkup: new InlineKeyboardMarkup().AddButtons(OccupyChatGptButtonText, ReleaseChatGptButtonText));
-                    ;
                 Console.WriteLine($"\n\tUser {query.From} clicked on {query.Data}\n");
 
-                if (query.Data == OccupyChatGptButtonText)
+                if (query.Data == BotMessages.OccupyChatGptButtonText)
                 {
                     await ChatSession.StartSession(query);
                 }
 
-                else if (query.Data == ReleaseChatGptButtonText)
+                else if (query.Data == BotMessages.ReleaseChatGptButtonText)
                 {
                     await ChatSession.StopSession(query);
                 }
-                await Bot.DeleteMessageAsync(query.Message!.Chat, query.Message.MessageId - 2);
             }
             await Task.CompletedTask;
             Console.WriteLine("End UpdateHandler()");
@@ -84,8 +77,12 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 
             if (msg?.Text == "/start")
             {
-                await Bot.SendTextMessageAsync(msg.Chat, $"Welcome in ChatGPT Keeper!\nDeveloper is: @miles_ss.\n ChatGPT free: {ChatSession.IsFree} Choose:",
-                    replyMarkup: new InlineKeyboardMarkup().AddButtons(OccupyChatGptButtonText, ReleaseChatGptButtonText));
+                await Bot.SendTextMessageAsync(msg.Chat, $"{BotMessages.StartMessage(currentUser: msg.From!.ToString())}{ChatSession.IsGptFree()}",
+                    replyMarkup: BotMessages.OccupyGptButton,
+                    parseMode: ParseMode.Html,
+                    protectContent: true,
+                    replyParameters: msg.MessageId);
+                await Bot.DeleteMessageAsync(msg.Chat, msg.MessageId);
             }
             
             Console.WriteLine("End OnMessage() in Host");
