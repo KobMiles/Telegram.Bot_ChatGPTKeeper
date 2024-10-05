@@ -1,15 +1,8 @@
-﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
+using Telegram.Bot.Exceptions;
 
 namespace _20241003_TelegramBot_ChatGPTKeeper
 {
@@ -27,66 +20,56 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 
         public void Start()
         {
-            Bot.OnUpdate += OnUpdate;
-            Bot.OnMessage += OnMessage;
-            Bot.OnError += OnError;
+            // Запускаем Polling для получения обновлений
+            var receiverOptions = new ReceiverOptions
+            {
+                AllowedUpdates = Array.Empty<UpdateType>() // Получаем все типы обновлений
+            };
 
-            Console.WriteLine("Bot start. ID: " + Bot.BotId);
+            Bot.StartReceiving(
+                HandleUpdateAsync,
+                HandleErrorAsync,
+                receiverOptions
+            );
+
+            Console.WriteLine("Bot is running. Press any key to exit...");
+            Console.ReadLine(); // Ожидание завершения работы
         }
 
-        private async Task OnUpdate(Update update)
+        private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
-
-            Console.WriteLine("Start UpdateHandler()");
-
-            if (update is { CallbackQuery: { } query })
+            if (update.Type == UpdateType.Message && update.Message?.Text != null)
             {
-                await Bot.AnswerCallbackQueryAsync(query.Id, $"You picked {query.Data}");
+                Console.WriteLine($"Received message from {update.Message.Chat.Username}: {update.Message.Text}");
 
-                Console.WriteLine($"\n\tUser {query.From} clicked on {query.Data}\n");
-
+                if (update.Message.Text == "/start")
+                {
+                    await botClient.SendTextMessageAsync(
+                        chatId: update.Message.Chat.Id,
+                        text: "Welcome to the bot!",
+                        cancellationToken: cancellationToken
+                    );
+                }
+            }
+            else if (update.Type == UpdateType.CallbackQuery && update.CallbackQuery?.Data != null)
+            {
+                // Обрабатываем нажатие кнопок
+                var query = update.CallbackQuery;
                 if (query.Data == BotMessages.OccupyChatGptButtonText)
                 {
                     await ChatSession.StartSession(query);
                 }
-
                 else if (query.Data == BotMessages.ReleaseChatGptButtonText)
                 {
                     await ChatSession.StopSession(query);
                 }
             }
-            await Task.CompletedTask;
-            Console.WriteLine("End UpdateHandler()");
         }
 
-        private async Task OnError(Exception exception, HandleErrorSource source)
+        private Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
-            Console.WriteLine("Start OnError() in Host");
-
-            Console.WriteLine("Error:" + exception.Message);
-
-            await Task.CompletedTask;
-            Console.WriteLine("Stop OnError() in Host");
-        }
-        async Task OnMessage(Message msg, UpdateType type)
-        {
-            Console.WriteLine("Start OnMessage() in Host");
-
-            Console.WriteLine($"\n \t New Message from {msg?.From?.Username ?? "Unknown user"}:" +
-                              $" {msg?.Text ?? "Not a text."}\n");
-
-            if (msg?.Text == "/start")
-            {
-                await Bot.SendTextMessageAsync(msg.Chat, $"{BotMessages.StartMessage(currentUser: msg.From!.ToString())}{ChatSession.IsGptFree()}",
-                    replyMarkup: BotMessages.OccupyGptButton,
-                    parseMode: ParseMode.Html,
-                    protectContent: true,
-                    replyParameters: msg.MessageId);
-                await Bot.DeleteMessageAsync(msg.Chat, msg.MessageId);
-            }
-            
-            Console.WriteLine("End OnMessage() in Host");
-            await Task.CompletedTask;
+            Console.WriteLine($"Error: {exception.Message}");
+            return Task.CompletedTask;
         }
     }
 }

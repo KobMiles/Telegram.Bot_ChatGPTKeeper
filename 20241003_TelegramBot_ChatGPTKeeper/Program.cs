@@ -1,7 +1,4 @@
 ﻿using Telegram.Bot;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace _20241003_TelegramBot_ChatGPTKeeper
 {
@@ -17,7 +14,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
             string? botToken = Environment.GetEnvironmentVariable("TELEGRAM_BOT_TOKEN");
             if (string.IsNullOrEmpty(botToken))
             {
-                Console.WriteLine("Error: BOT_API_KEY environment variable is not set.");
+                Console.WriteLine("Error: TELEGRAM_BOT_TOKEN environment variable is not set.");
                 return; // Останавливаем программу, если токен не задан
             }
 
@@ -27,7 +24,6 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 
             Console.WriteLine("Bot is running. Press Enter to stop...");
             Console.ReadLine(); // Ждем ввода для завершения программы
-
         }
     }
 }
