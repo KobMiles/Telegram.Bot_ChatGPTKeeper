@@ -3,20 +3,18 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 
 # Копируем CSPROJ и восстанавливаем зависимости
-COPY *.csproj ./
-RUN dotnet restore
+COPY 20241003_TelegramBot_ChatGPTKeeper/20241003_TelegramBot_ChatGPTKeeper.csproj ./20241003_TelegramBot_ChatGPTKeeper/
+RUN dotnet restore ./20241003_TelegramBot_ChatGPTKeeper/20241003_TelegramBot_ChatGPTKeeper.csproj
 
-# Копируем все файлы и билдим проект
-COPY . ./
+# Копируем остальные файлы проекта и билдим приложение
+COPY ./20241003_TelegramBot_ChatGPTKeeper ./20241003_TelegramBot_ChatGPTKeeper
+WORKDIR /app/20241003_TelegramBot_ChatGPTKeeper
 RUN dotnet publish -c Release -o out
 
-# Используем минимальный образ .NET Runtime для запуска
+# Используем минимальный образ для запуска
 FROM mcr.microsoft.com/dotnet/runtime:6.0
 WORKDIR /app
-COPY --from=build-env /app/out .
+COPY --from=build-env /app/20241003_TelegramBot_ChatGPTKeeper/out .
 
-# Устанавливаем переменные окружения для Railway
-ENV TELEGRAM_BOT_TOKEN=your_telegram_bot_token_here
-
-# Команда для запуска приложения
-ENTRYPOINT ["dotnet", "_20241003_TelegramBot_ChatGPTKeeper.dll"]
+# Запускаем приложение
+ENTRYPOINT ["dotnet", "20241003_TelegramBot_ChatGPTKeeper.dll"]
