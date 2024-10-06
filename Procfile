@@ -1,1 +1,1 @@
-web: dotnet _20241003_TelegramBot_ChatGPTKeeper.dll
+web: dotnet 20241003_TelegramBot_ChatGPTKeeper.dll
