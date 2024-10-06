@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
@@ -25,13 +26,16 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
             ChatSession = new ChatSession(Bot);
         }
 
-        public void Start()
+        public async Task Start()
         {
+            await Bot.DropPendingUpdatesAsync();
             Bot.OnUpdate += OnUpdate;
             Bot.OnMessage += OnMessage;
             Bot.OnError += OnError;
 
             Console.WriteLine("Bot start. ID: " + Bot.BotId);
+            while (Console.ReadKey(true).Key != ConsoleKey.Escape);
+            await Task.CompletedTask;
         }
 
         private async Task OnUpdate(Update update)
