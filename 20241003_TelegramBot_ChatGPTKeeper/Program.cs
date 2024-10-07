@@ -16,20 +16,6 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 
             Console.WriteLine("Bot stop after enter:");
             Console.ReadLine();
-            Console.WriteLine("Bot stop after enter:");
-            Console.ReadLine();
-            Console.WriteLine("Bot stop after enter:");
-            Console.ReadLine();
-            Console.WriteLine("Bot stop after enter:");
-            Console.ReadLine();
-            Console.WriteLine("Bot stop after enter:");
-            Console.ReadLine();
-            Console.WriteLine("Bot stop after enter:");
-            Console.ReadLine();
-            Console.WriteLine("Bot stop after enter:");
-            Console.ReadLine();
-            Console.WriteLine("Bot stop after enter:");
-            Console.ReadLine();
         }
     }
 }
