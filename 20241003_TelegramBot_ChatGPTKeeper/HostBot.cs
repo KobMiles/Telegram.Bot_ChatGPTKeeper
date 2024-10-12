@@ -34,7 +34,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
             Bot.OnError += OnError;
 
             Console.WriteLine("Bot start. ID: " + Bot.BotId);
-            while (Console.ReadKey(true).Key != ConsoleKey.Escape);
+            await Task.Delay(-1);
             await Task.CompletedTask;
         }
 

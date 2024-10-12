@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("20241003_TelegramBot_ChatGPTKeeper")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c11a9edf13a1b7e4c10133f646825fdaeecd3738")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b98f8bff6f44ad6811400d191db3f5e690454a77")]
 [assembly: System.Reflection.AssemblyProductAttribute("20241003_TelegramBot_ChatGPTKeeper")]
 [assembly: System.Reflection.AssemblyTitleAttribute("20241003_TelegramBot_ChatGPTKeeper")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
