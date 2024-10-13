@@ -12,14 +12,20 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace _20241003_TelegramBot_ChatGPTKeeper
 {
-    internal class ChatSession(TelegramBotClient bot)
+    internal class ChatSession
     {
+        private HostBot _hostBot;
         public string CurrentUser { get; private set; } = String.Empty;
 
         public bool IsFree { get; private set; } = true;
 
         public DateTime TimeGptTaken;
         public TimeSpan TimeGptOccupy;
+
+        public ChatSession(HostBot bot)
+        {
+            _hostBot = bot;
+        }
 
         public async Task StartSession(CallbackQuery query)
         {
@@ -29,46 +35,32 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
             }
             if (!IsFree)
             {
+                await _hostBot.BotResponse.OnCannotReleaseOtherUserAnswer(query);
                 TimeGptOccupy = DateTime.Now - TimeGptTaken;
-                await bot.SendTextMessageAsync(query.Message!.Chat,
-                    BotMessages.ChatGptBusyMessage(CurrentUser, TimeGptOccupy.Minutes),
-                    replyMarkup: BotMessages.ReleaseGptButton,
-                    parseMode: ParseMode.Html,
-                    protectContent: true,
-                    replyParameters: query.Message.MessageId);
+                await _hostBot.BotResponse.OnBusyChatSessionMessage(query);
                 return;
             }
+
+            await _hostBot.BotResponse.OnPickedCallbackQuery(query);
             TimeGptTaken = DateTime.Now;
             CurrentUser = query.From.ToString();
             IsFree = false;
-            await bot.SendTextMessageAsync(query.Message!.Chat,
-                BotMessages.ChatGptOccupiedMessage(CurrentUser),
-                replyMarkup: BotMessages.ReleaseGptButton,
-                parseMode: ParseMode.Html,
-                protectContent: true,
-                replyParameters: query.Message.MessageId);
+            await _hostBot.BotResponse.OnOccupiedChatMessage(query);
         }
 
         public async Task StopSession(CallbackQuery query)
         {
             if (CurrentUser == query.From.ToString())
             {
-                await bot.SendTextMessageAsync(query.Message!.Chat,
-                    BotMessages.ChatGptReleasedMessage(CurrentUser, TimeGptOccupy.Minutes),
-                    replyMarkup: BotMessages.OccupyGptButton,
-                    parseMode: ParseMode.Html,
-                    protectContent: true,
-                    replyParameters: query.Message.MessageId);
+                await _hostBot.BotResponse.OnPickedCallbackQuery(query);
+                await _hostBot.BotResponse.OnReleaseChatSessionMessage(query);
                 CurrentUser = string.Empty;
                 IsFree = true;
             }
 
             else if (CurrentUser != query.From.ToString())
             {
-                //await bot.SendTextMessageAsync(query.Message!.Chat,
-                //    $"You can't free someone else's ChatGPT.\nNow ChatGPT taken by user: {CurrentUser}." +
-                //    $"\nTotal time in use: {TimeGptOccupy.Minutes} minutes",
-                //    replyMarkup: BotMessages.ReleaseGptButton);
+                await _hostBot.BotResponse.OnCannotReleaseOtherUserAnswer(query);
             }
         }
 
