@@ -1,64 +1,43 @@
-﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace _20241003_TelegramBot_ChatGPTKeeper
 {
     internal class HostBot
     {
         public readonly TelegramBotClient Bot;
-
         public readonly ChatSession ChatSession;
+        public readonly BotResponse BotResponse;
 
-        public HostBot(string apikey)
+        public HostBot(string apiKey)
         {
-            Bot = new TelegramBotClient(apikey);
-            ChatSession = new ChatSession(Bot);
+            Bot = new TelegramBotClient(apiKey);
+            ChatSession = new ChatSession(this);
+            BotResponse = new BotResponse(this);
         }
 
         public async Task Start()
         {
             await Bot.DropPendingUpdatesAsync();
+
             Bot.OnUpdate += OnUpdate;
             Bot.OnMessage += OnMessage;
             Bot.OnError += OnError;
 
             Console.WriteLine("Bot start. ID: " + Bot.BotId);
+
             await Task.Delay(-1);
             await Task.CompletedTask;
         }
 
         private async Task OnUpdate(Update update)
         {
-
             Console.WriteLine("Start UpdateHandler()");
 
-            if (update is { CallbackQuery: { } query })
-            {
-                await Bot.AnswerCallbackQueryAsync(query.Id, $"You picked {query.Data}");
+            await BotResponse.OnCallbackQueryMessage(update);
 
-                Console.WriteLine($"\n\tUser {query.From} clicked on {query.Data}\n");
-
-                if (query.Data == BotMessages.OccupyChatGptButtonText)
-                {
-                    await ChatSession.StartSession(query);
-                }
-
-                else if (query.Data == BotMessages.ReleaseChatGptButtonText)
-                {
-                    await ChatSession.StopSession(query);
-                }
-            }
             await Task.CompletedTask;
             Console.WriteLine("End UpdateHandler()");
         }
@@ -67,28 +46,20 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         {
             Console.WriteLine("Start OnError() in Host");
 
-            Console.WriteLine("Error:" + exception.Message);
+            await BotResponse.OnErrorConsoleMessage(exception);
 
             await Task.CompletedTask;
             Console.WriteLine("Stop OnError() in Host");
         }
-        async Task OnMessage(Message msg, UpdateType type)
+
+        async Task OnMessage(Message message, UpdateType type)
         {
             Console.WriteLine("Start OnMessage() in Host");
 
-            Console.WriteLine($"\n \t New Message from {msg?.From?.Username ?? "Unknown user"}:" +
-                              $" {msg?.Text ?? "Not a text."}\n");
+            await BotResponse.OnMessageConsoleMessage(message: message);
 
-            if (msg?.Text == "/start")
-            {
-                await Bot.SendTextMessageAsync(msg.Chat, $"{BotMessages.StartMessage(currentUser: msg.From!.ToString())}{ChatSession.IsGptFree()}",
-                    replyMarkup: BotMessages.OccupyGptButton,
-                    parseMode: ParseMode.Html,
-                    protectContent: true,
-                    replyParameters: msg.MessageId);
-                await Bot.DeleteMessageAsync(msg.Chat, msg.MessageId);
-            }
-            
+            await BotResponse.OnCommandStartMessage(message: message);
+
             Console.WriteLine("End OnMessage() in Host");
             await Task.CompletedTask;
         }
