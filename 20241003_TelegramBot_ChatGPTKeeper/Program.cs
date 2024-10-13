@@ -6,19 +6,18 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 {
     internal class Program
     {
-        public static readonly HostBot ChatGptBot = new HostBot(Environment.GetEnvironmentVariable("TELEGRAM_API_KEY"));
+        public static readonly HostBot ChatGptBot = new HostBot(Environment.GetEnvironmentVariable("TELEGRAM_API_KEY")
+                                                                ?? throw new ArgumentNullException("TELEGRAM_API_KEY not found"));
 
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            // Запускаем бот
             await ChatGptBot.Start();
 
             Console.WriteLine("Bot is running...");
 
-            // Удерживаем приложение активным с помощью бесконечного ожидания
-            await Task.Delay(-1);  // Ожидание бесконечно (вместо Console.ReadLine())
+            await Task.Delay(-1);
         }
     }
 }
