@@ -67,7 +67,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         public string IsGptFree()
         {
             return IsFree ? "\n\n\ud83d\udfe9Now GPT is free!\ud83d\udfe9.\nYou can take:" 
-                : $"\ud83d\udfe5Now GPT is busy\ud83d\udfe5 by {CurrentUser}!";
+                : $"\n\n\ud83d\udfe5Now GPT is busy\ud83d\udfe5 by {CurrentUser}!";
         }
     }
 }
