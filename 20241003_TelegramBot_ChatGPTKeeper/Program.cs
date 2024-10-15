@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Telegram.Bot;
-
-namespace _20241003_TelegramBot_ChatGPTKeeper
+﻿namespace _20241003_TelegramBot_ChatGPTKeeper
 {
     internal class Program
     {
