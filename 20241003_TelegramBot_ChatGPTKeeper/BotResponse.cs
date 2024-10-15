@@ -64,7 +64,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         public async Task SendBusyChatSessionNotification(CallbackQuery query, int timeGptOccupyInMinutes)
         {
             await _hostBot.Bot.SendTextMessageAsync(query.Message!.Chat,
-                BotMessages.ChatGptBusyMessage(_hostBot.ChatSession.CurrentUser, timeGptOccupyInMinutes),
+                BotMessages.ChatGptBusyMessage(_hostBot.ChatSession.ActiveUser, timeGptOccupyInMinutes),
                 replyMarkup: BotMessages.ReleaseButtonMarkup,
                 parseMode: ParseMode.Html,
                 protectContent: true,
@@ -75,7 +75,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         {
             await _hostBot.Bot.SendPhotoAsync(query.Message!.Chat,
                 "https://i.ibb.co/LzNDhPc/red-chat.png",
-                caption: BotMessages.ChatGptOccupiedMessage(_hostBot.ChatSession.CurrentUser),
+                caption: BotMessages.ChatGptOccupiedMessage(_hostBot.ChatSession.ActiveUser),
                 replyMarkup: BotMessages.ReleaseButtonMarkup,
                 parseMode: ParseMode.Html,
                 protectContent: true,
@@ -86,7 +86,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         {
             await _hostBot.Bot.SendPhotoAsync(query.Message!.Chat,
                 "https://i.ibb.co/VNc5pfX/green-chat.png",
-                caption: BotMessages.ChatGptReleasedMessage(_hostBot.ChatSession.CurrentUser, timeGptOccupyInMinutes),
+                caption: BotMessages.ChatGptReleasedMessage(_hostBot.ChatSession.ActiveUser, timeGptOccupyInMinutes),
                 replyMarkup: BotMessages.OccupyButtonMarkup,
                 parseMode: ParseMode.Html,
                 protectContent: true,
@@ -95,7 +95,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 
         public async Task NotifyCannotReleaseByOtherUser(CallbackQuery query)
         {
-            await _hostBot.Bot.AnswerCallbackQueryAsync(query.Id, $"It is already occupied by {_hostBot.ChatSession.CurrentUser}");
+            await _hostBot.Bot.AnswerCallbackQueryAsync(query.Id, $"It is already occupied by {_hostBot.ChatSession.ActiveUser}");
         }
 
         public async Task AcknowledgeCallbackSelection(CallbackQuery query)
