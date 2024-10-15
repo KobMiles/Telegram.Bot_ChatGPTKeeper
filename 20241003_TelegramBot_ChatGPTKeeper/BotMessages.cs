@@ -12,7 +12,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         public static string ChatGptOccupiedMessage(string currentUser) =>
             $"User: {currentUser} \ud83d\udfe5<b>occupy ChatGPT!</b>\n\n\ud83d\udfe5<b>ChatGPT is busy</b>";
         public static string ChatGptReleasedMessage(string currentUser, int minutes) =>
-            $"\ud83d\udfe9<b>ChatGPT has been released!</b>\nStatistic:\nUser: {currentUser}\nTotal time in use: {minutes} minutes\n\n\ud83d\udfe9<b>ChatGPT is FREE!</b>";
+            $"\ud83d\udfe9<b>ChatGPT has been released!</b>\n<b>Statistic:</b>\nUser: {currentUser}\nTotal time in use: {minutes} minutes\n\n\ud83d\udfe9<b>ChatGPT is FREE!</b>";
         public static string CannotReleaseOtherUserMessage(string currentUser, int minutes) =>
             $"\n\ud83d\udfe5<b>Now ChatGPT taken by user:</b> {currentUser}.\nTotal time in use: {minutes} minutes";
 
