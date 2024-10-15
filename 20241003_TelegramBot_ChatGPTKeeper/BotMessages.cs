@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
+﻿using Telegram.Bot.Types.ReplyMarkups;
 
 namespace _20241003_TelegramBot_ChatGPTKeeper
 {
@@ -23,14 +16,10 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         public static string CannotReleaseOtherUserMessage(string currentUser, int minutes) =>
             $"\n\ud83d\udfe5<b>Now ChatGPT taken by user:</b> {currentUser}.\nTotal time in use: {minutes} minutes";
 
-        public static IReplyMarkup OccupyOrReleaseGptButton =
-            new InlineKeyboardMarkup().AddButtons(BotMessages.OccupyChatGptButtonText,
-                BotMessages.ReleaseChatGptButtonText);
-
-        public static IReplyMarkup OccupyGptButton =
+        public static IReplyMarkup OccupyButtonMarkup =
             new InlineKeyboardMarkup().AddButtons(BotMessages.OccupyChatGptButtonText);
 
-        public static IReplyMarkup ReleaseGptButton =
+        public static IReplyMarkup ReleaseButtonMarkup =
             new InlineKeyboardMarkup().AddButtons(BotMessages.ReleaseChatGptButtonText);
     }
 
