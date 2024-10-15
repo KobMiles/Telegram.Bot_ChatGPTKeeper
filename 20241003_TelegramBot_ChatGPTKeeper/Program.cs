@@ -10,10 +10,6 @@
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             await ChatGptBot.Start();
-
-            Console.WriteLine("Bot is running...");
-
-            await Task.Delay(-1);
         }
     }
 }
