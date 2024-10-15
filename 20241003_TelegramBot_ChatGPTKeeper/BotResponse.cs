@@ -30,9 +30,9 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
             if (message?.Text == "/start" || message?.Text == "/start@chatgptkeeper_bot")
             {
                 await _hostBot.Bot.SendTextMessageAsync(message.Chat,
-                    $"{ BotMessages.StartMessage(currentUser: message.From!.ToString()) }" +
-                    $"{_hostBot.ChatSession.IsGptFree() }",
-                    replyMarkup: BotMessages.OccupyGptButton,
+                    $"{BotMessages.StartMessage(currentUser: message.From!.ToString())}" +
+                    $"{_hostBot.ChatSession.IsGptFree()}",
+                    replyMarkup: BotMessages.OccupyButtonMarkup,
                     parseMode: ParseMode.Html,
                     protectContent: true,
                     replyParameters: message.MessageId);
@@ -61,44 +61,44 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
             }
         }
 
-        public async Task OnBusyChatSessionMessage(CallbackQuery query)
+        public async Task SendBusyChatSessionNotification(CallbackQuery query, int timeGptOccupyInMinutes)
         {
             await _hostBot.Bot.SendTextMessageAsync(query.Message!.Chat,
-                BotMessages.ChatGptBusyMessage(_hostBot.ChatSession.CurrentUser, _hostBot.ChatSession.TimeGptOccupy.Minutes),
-                replyMarkup: BotMessages.ReleaseGptButton,
+                BotMessages.ChatGptBusyMessage(_hostBot.ChatSession.CurrentUser, timeGptOccupyInMinutes),
+                replyMarkup: BotMessages.ReleaseButtonMarkup,
                 parseMode: ParseMode.Html,
                 protectContent: true,
                 replyParameters: query.Message.MessageId);
         }
 
-        public async Task OnOccupiedChatMessage(CallbackQuery query)
+        public async Task SendChatOccupiedMessage(CallbackQuery query)
         {
             await _hostBot.Bot.SendPhotoAsync(query.Message!.Chat,
                 "https://i.ibb.co/LzNDhPc/red-chat.png",
                 caption: BotMessages.ChatGptOccupiedMessage(_hostBot.ChatSession.CurrentUser),
-                replyMarkup: BotMessages.ReleaseGptButton,
+                replyMarkup: BotMessages.ReleaseButtonMarkup,
                 parseMode: ParseMode.Html,
                 protectContent: true,
                 replyParameters: query.Message.MessageId);
         }
 
-        public async Task OnReleaseChatSessionMessage(CallbackQuery query)
+        public async Task SendChatReleaseNotification(CallbackQuery query, int timeGptOccupyInMinutes)
         {
             await _hostBot.Bot.SendPhotoAsync(query.Message!.Chat,
                 "https://i.ibb.co/VNc5pfX/green-chat.png",
-                caption: BotMessages.ChatGptReleasedMessage(_hostBot.ChatSession.CurrentUser, _hostBot.ChatSession.TimeGptOccupy.Minutes),
-                replyMarkup: BotMessages.OccupyGptButton,
+                caption: BotMessages.ChatGptReleasedMessage(_hostBot.ChatSession.CurrentUser, timeGptOccupyInMinutes),
+                replyMarkup: BotMessages.OccupyButtonMarkup,
                 parseMode: ParseMode.Html,
                 protectContent: true,
                 replyParameters: query.Message.MessageId);
         }
 
-        public async Task OnCannotReleaseOtherUserAnswer(CallbackQuery query)
+        public async Task NotifyCannotReleaseByOtherUser(CallbackQuery query)
         {
             await _hostBot.Bot.AnswerCallbackQueryAsync(query.Id, $"It is already occupied by {_hostBot.ChatSession.CurrentUser}");
         }
 
-        public async Task OnPickedCallbackQuery(CallbackQuery query)
+        public async Task AcknowledgeCallbackSelection(CallbackQuery query)
         {
             await _hostBot.Bot.AnswerCallbackQueryAsync(query.Id, $"You picked {query.Data}");
         }
