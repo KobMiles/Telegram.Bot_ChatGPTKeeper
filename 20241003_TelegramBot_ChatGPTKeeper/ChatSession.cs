@@ -4,7 +4,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 {
     internal class ChatSession
     {
-        private readonly HostBot _hostBot;
+        private readonly TelegramBotHost _telegramBotHost;
         public string ActiveUser { get; private set; } = string.Empty;
 
         public bool IsSessionFree { get; private set; } = true;
@@ -12,9 +12,9 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         private DateTime _sessionStartTime;
         private TimeSpan _sessionDuration;
 
-        public ChatSession(HostBot hostBot)
+        public ChatSession(TelegramBotHost telegramBotHost)
         {
-            _hostBot = hostBot;
+            _telegramBotHost = telegramBotHost;
         }
 
         public async Task StartSession(CallbackQuery query)
@@ -26,35 +26,35 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 
             if (!IsSessionFree)
             {
-                await _hostBot.BotResponse.NotifyCannotReleaseByOtherUser(query);
+                await _telegramBotHost.BotResponse.NotifyCannotReleaseByOtherUser(query);
                 _sessionDuration = DateTime.Now - _sessionStartTime;
-                await _hostBot.BotResponse.SendBusyChatSessionNotification(query, _sessionDuration.Minutes);
+                await _telegramBotHost.BotResponse.SendBusyChatSessionNotification(query, _sessionDuration.Minutes);
                 return;
             }
 
-            await _hostBot.BotResponse.AcknowledgeCallbackSelection(query);
+            await _telegramBotHost.BotResponse.AcknowledgeCallbackSelection(query);
             _sessionStartTime = DateTime.Now;
             ActiveUser = query.From.ToString();
             IsSessionFree = false;
-            await _hostBot.BotResponse.SendChatOccupiedMessage(query);
+            await _telegramBotHost.BotResponse.SendChatOccupiedMessage(query);
         }
 
         public async Task StopSession(CallbackQuery query)
         {
             if (ActiveUser == query.From.ToString())
             {
-                await _hostBot.BotResponse.AcknowledgeCallbackSelection(query);
+                await _telegramBotHost.BotResponse.AcknowledgeCallbackSelection(query);
 
                 _sessionDuration = DateTime.Now - _sessionStartTime;
 
-                await _hostBot.BotResponse.SendChatReleaseNotification(query, _sessionDuration.Minutes);
+                await _telegramBotHost.BotResponse.SendChatReleaseNotification(query, _sessionDuration.Minutes);
                 ActiveUser = string.Empty;
                 IsSessionFree = true;
             }
 
             else if (ActiveUser != query.From.ToString())
             {
-                await _hostBot.BotResponse.NotifyCannotReleaseByOtherUser(query);
+                await _telegramBotHost.BotResponse.NotifyCannotReleaseByOtherUser(query);
             }
         }
 
