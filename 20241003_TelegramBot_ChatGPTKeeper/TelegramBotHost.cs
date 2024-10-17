@@ -2,31 +2,32 @@
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace _20241003_TelegramBot_ChatGPTKeeper
 {
     internal class TelegramBotHost
     {
-        public readonly TelegramBotClient Bot;
-        public readonly ChatSession ChatSession;
-        public readonly BotResponse BotResponse;
+        private readonly TelegramBotClient _bot;
+        private readonly ChatSession _userChatSession;
+        private readonly ChatBotResponseHandler _responseHandler;
 
         public TelegramBotHost(string apiKey)
         {
-            Bot = new TelegramBotClient(apiKey);
-            ChatSession = new ChatSession(this);
-            BotResponse = new BotResponse(this);
+            _bot = new TelegramBotClient(apiKey);
+            _responseHandler = new ChatBotResponseHandler(_bot, this, _userChatSession);
+            _userChatSession = new ChatSession(this, _responseHandler);
         }
 
         public async Task Start()
         {
-            await Bot.DropPendingUpdatesAsync();
+            await _bot.DropPendingUpdatesAsync();
 
-            Bot.OnUpdate += OnUpdate;
-            Bot.OnMessage += OnMessage;
-            Bot.OnError += OnError;
+            _bot.OnUpdate += OnUpdate;
+            _bot.OnMessage += OnMessage;
+            _bot.OnError += OnError;
 
-            Console.WriteLine("Bot start. ID: " + Bot.BotId);
+            Console.WriteLine("Bot start. ID: " + _bot.BotId);
 
             await Task.Delay(-1);
         }
@@ -35,7 +36,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         {
             Console.WriteLine("Start UpdateHandler()");
 
-            await BotResponse.OnCallbackQueryMessage(update);
+            await _responseHandler.OnCallbackQueryMessage(update);
 
             Console.WriteLine("End UpdateHandler()");
         }
@@ -44,18 +45,18 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         {
             Console.WriteLine("Start OnError() in Host");
 
-            await BotResponse.OnErrorConsoleMessage(exception);
+            await _responseHandler.OnErrorConsoleMessage(exception);
 
             Console.WriteLine("Stop OnError() in Host");
         }
 
-        async Task OnMessage(Message message, UpdateType type)
+        private async Task OnMessage(Message message, UpdateType type)
         {
             Console.WriteLine("Start OnMessage() in Host");
 
-            await BotResponse.OnMessageConsoleMessage(message: message);
+            await _responseHandler.OnMessageConsoleMessage(message: message);
 
-            await BotResponse.OnCommandStartMessage(message: message);
+            await _responseHandler.OnCommandStartMessage(message: message);
 
             Console.WriteLine("End OnMessage() in Host");
         }
