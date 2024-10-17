@@ -30,9 +30,9 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
             if (message?.Text == "/start" || message?.Text == "/start@chatgptkeeper_bot")
             {
                 await _hostBot.Bot.SendTextMessageAsync(message.Chat,
-                    $"{BotMessages.StartMessage(currentUser: message.From!.ToString())}" +
+                    $"{ChatBotMessages.StartMessage(currentUser: message.From!.ToString())}" +
                     $"{_hostBot.ChatSession.IsGptFree()}",
-                    replyMarkup: BotMessages.OccupyButtonMarkup,
+                    replyMarkup: ChatBotMessages.OccupyButtonMarkup,
                     parseMode: ParseMode.Html,
                     protectContent: true,
                     replyParameters: message.MessageId);
@@ -49,12 +49,12 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
             {
                 Console.WriteLine($"\n\tUser {query.From} clicked on {query.Data}\n");
 
-                if (query.Data == BotMessages.OccupyChatGptButtonText)
+                if (query.Data == ChatBotMessages.OccupyChatGptButtonText)
                 {
                     await _hostBot.Bot.AnswerCallbackQueryAsync(query.Id, $"You picked {query.Data}");
                     await _hostBot.ChatSession.StartSession(query);
                 }
-                else if (query.Data == BotMessages.ReleaseChatGptButtonText)
+                else if (query.Data == ChatBotMessages.ReleaseChatGptButtonText)
                 {
                     await _hostBot.ChatSession.StopSession(query);
                 }
@@ -64,8 +64,8 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         public async Task SendBusyChatSessionNotification(CallbackQuery query, int timeGptOccupyInMinutes)
         {
             await _hostBot.Bot.SendTextMessageAsync(query.Message!.Chat,
-                BotMessages.ChatGptBusyMessage(_hostBot.ChatSession.ActiveUser, timeGptOccupyInMinutes),
-                replyMarkup: BotMessages.ReleaseButtonMarkup,
+                ChatBotMessages.ChatGptBusyMessage(_hostBot.ChatSession.ActiveUser, timeGptOccupyInMinutes),
+                replyMarkup: ChatBotMessages.ReleaseButtonMarkup,
                 parseMode: ParseMode.Html,
                 protectContent: true,
                 replyParameters: query.Message.MessageId);
@@ -75,8 +75,8 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         {
             await _hostBot.Bot.SendPhotoAsync(query.Message!.Chat,
                 "https://i.ibb.co/LzNDhPc/red-chat.png",
-                caption: BotMessages.ChatGptOccupiedMessage(_hostBot.ChatSession.ActiveUser),
-                replyMarkup: BotMessages.ReleaseButtonMarkup,
+                caption: ChatBotMessages.ChatGptOccupiedMessage(_hostBot.ChatSession.ActiveUser),
+                replyMarkup: ChatBotMessages.ReleaseButtonMarkup,
                 parseMode: ParseMode.Html,
                 protectContent: true,
                 replyParameters: query.Message.MessageId);
@@ -86,8 +86,8 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         {
             await _hostBot.Bot.SendPhotoAsync(query.Message!.Chat,
                 "https://i.ibb.co/VNc5pfX/green-chat.png",
-                caption: BotMessages.ChatGptReleasedMessage(_hostBot.ChatSession.ActiveUser, timeGptOccupyInMinutes),
-                replyMarkup: BotMessages.OccupyButtonMarkup,
+                caption: ChatBotMessages.ChatGptReleasedMessage(_hostBot.ChatSession.ActiveUser, timeGptOccupyInMinutes),
+                replyMarkup: ChatBotMessages.OccupyButtonMarkup,
                 parseMode: ParseMode.Html,
                 protectContent: true,
                 replyParameters: query.Message.MessageId);
