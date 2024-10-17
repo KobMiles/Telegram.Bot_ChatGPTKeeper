@@ -4,11 +4,11 @@ using Telegram.Bot.Types.Enums;
 
 namespace _20241003_TelegramBot_ChatGPTKeeper
 {
-    internal class BotResponse
+    internal class ChatBotResponseHandler
     {
         private readonly TelegramBotHost _telegramBotHost;
 
-        public BotResponse(TelegramBotHost telegramBotHost)
+        public ChatBotResponseHandler(TelegramBotHost telegramBotHost)
         {
             _telegramBotHost = telegramBotHost;
         }
