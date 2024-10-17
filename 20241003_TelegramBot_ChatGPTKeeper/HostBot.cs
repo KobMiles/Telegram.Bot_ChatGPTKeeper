@@ -5,13 +5,13 @@ using Telegram.Bot.Types.Enums;
 
 namespace _20241003_TelegramBot_ChatGPTKeeper
 {
-    internal class HostBot
+    internal class TelegramBotHost
     {
         public readonly TelegramBotClient Bot;
         public readonly ChatSession ChatSession;
         public readonly BotResponse BotResponse;
 
-        public HostBot(string apiKey)
+        public TelegramBotHost(string apiKey)
         {
             Bot = new TelegramBotClient(apiKey);
             ChatSession = new ChatSession(this);
