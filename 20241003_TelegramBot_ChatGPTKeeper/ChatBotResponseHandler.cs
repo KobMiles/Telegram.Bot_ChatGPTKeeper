@@ -7,11 +7,16 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
     internal class ChatBotResponseHandler
     {
         private readonly TelegramBotHost _telegramBotHost;
+        private readonly ChatSession _chatSession;
+        private readonly TelegramBotClient _telegramBotClient;
 
-        public ChatBotResponseHandler(TelegramBotHost telegramBotHost)
+        public ChatBotResponseHandler(TelegramBotClient telegramBotClient, TelegramBotHost telegramBotHost, ChatSession chatSession)
         {
             _telegramBotHost = telegramBotHost;
+            _chatSession = chatSession;
+            _telegramBotClient = telegramBotClient;
         }
+
         public async Task OnErrorConsoleMessage(Exception exception)
         {
             Console.WriteLine("Error:" + exception.Message);
@@ -29,15 +34,15 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         {
             if (message?.Text == "/start" || message?.Text == "/start@chatgptkeeper_bot")
             {
-                await _telegramBotHost.Bot.SendTextMessageAsync(message.Chat,
+                await _telegramBotClient.SendTextMessageAsync(message.Chat,
                     $"{ ChatBotMessages.StartMessage(currentUser: message.From!.ToString()) }" +
-                    $"{ _telegramBotHost.ChatSession.IsGptFree() }",
+                    $"{_chatSession.IsGptFree() }",
                     replyMarkup: ChatBotMessages.OccupyButtonMarkup,
                     parseMode: ParseMode.Html,
                     protectContent: true,
                     replyParameters: message.MessageId);
 
-                await _telegramBotHost.Bot.DeleteMessageAsync(message.Chat, message.MessageId);
+                await _telegramBotClient.DeleteMessageAsync(message.Chat, message.MessageId);
 
                 await Task.CompletedTask;
             }
@@ -51,20 +56,20 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 
                 if (query.Data == ChatBotMessages.OccupyChatGptButtonText)
                 {
-                    await _telegramBotHost.Bot.AnswerCallbackQueryAsync(query.Id, $"You picked {query.Data}");
-                    await _telegramBotHost.ChatSession.StartSession(query);
+                    await _telegramBotClient.AnswerCallbackQueryAsync(query.Id, $"You picked {query.Data}");
+                    await _chatSession.StartSession(query);
                 }
                 else if (query.Data == ChatBotMessages.ReleaseChatGptButtonText)
                 {
-                    await _telegramBotHost.ChatSession.StopSession(query);
+                    await _chatSession.StopSession(query);
                 }
             }
         }
 
         public async Task SendBusyChatSessionNotification(CallbackQuery query, int timeGptOccupyInMinutes)
         {
-            await _telegramBotHost.Bot.SendTextMessageAsync(query.Message!.Chat,
-                ChatBotMessages.ChatGptBusyMessage(_telegramBotHost.ChatSession.ActiveUser, timeGptOccupyInMinutes),
+            await _telegramBotClient.SendTextMessageAsync(query.Message!.Chat,
+                ChatBotMessages.ChatGptBusyMessage(_chatSession.ActiveUser, timeGptOccupyInMinutes),
                 replyMarkup: ChatBotMessages.ReleaseButtonMarkup,
                 parseMode: ParseMode.Html,
                 protectContent: true,
@@ -73,9 +78,9 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 
         public async Task SendChatOccupiedMessage(CallbackQuery query)
         {
-            await _telegramBotHost.Bot.SendPhotoAsync(query.Message!.Chat,
+            await _telegramBotClient.SendPhotoAsync(query.Message!.Chat,
                 "https://i.ibb.co/LzNDhPc/red-chat.png",
-                caption: ChatBotMessages.ChatGptOccupiedMessage(_telegramBotHost.ChatSession.ActiveUser),
+                caption: ChatBotMessages.ChatGptOccupiedMessage(_chatSession.ActiveUser),
                 replyMarkup: ChatBotMessages.ReleaseButtonMarkup,
                 parseMode: ParseMode.Html,
                 protectContent: true,
@@ -84,9 +89,9 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 
         public async Task SendChatReleaseNotification(CallbackQuery query, int timeGptOccupyInMinutes)
         {
-            await _telegramBotHost.Bot.SendPhotoAsync(query.Message!.Chat,
+            await _telegramBotClient.SendPhotoAsync(query.Message!.Chat,
                 "https://i.ibb.co/VNc5pfX/green-chat.png",
-                caption: ChatBotMessages.ChatGptReleasedMessage(_telegramBotHost.ChatSession.ActiveUser, timeGptOccupyInMinutes),
+                caption: ChatBotMessages.ChatGptReleasedMessage(_chatSession.ActiveUser, timeGptOccupyInMinutes),
                 replyMarkup: ChatBotMessages.OccupyButtonMarkup,
                 parseMode: ParseMode.Html,
                 protectContent: true,
@@ -95,13 +100,13 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 
         public async Task NotifyCannotReleaseByOtherUser(CallbackQuery query)
         {
-            await _telegramBotHost.Bot.AnswerCallbackQueryAsync(query.Id,
-                $"It is already occupied by { _telegramBotHost.ChatSession.ActiveUser }");
+            await _telegramBotClient.AnswerCallbackQueryAsync(query.Id,
+                $"It is already occupied by { _chatSession.ActiveUser }");
         }
 
         public async Task AcknowledgeCallbackSelection(CallbackQuery query)
         {
-            await _telegramBotHost.Bot.AnswerCallbackQueryAsync(query.Id, $"You picked { query.Data }");
+            await _telegramBotClient.AnswerCallbackQueryAsync(query.Id, $"You picked { query.Data }");
         }
     }
 }
