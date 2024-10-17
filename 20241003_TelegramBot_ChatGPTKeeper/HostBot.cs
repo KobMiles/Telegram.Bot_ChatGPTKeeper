@@ -29,7 +29,6 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
             Console.WriteLine("Bot start. ID: " + Bot.BotId);
 
             await Task.Delay(-1);
-            await Task.CompletedTask;
         }
 
         private async Task OnUpdate(Update update)
@@ -38,7 +37,6 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 
             await BotResponse.OnCallbackQueryMessage(update);
 
-            await Task.CompletedTask;
             Console.WriteLine("End UpdateHandler()");
         }
 
@@ -48,7 +46,6 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 
             await BotResponse.OnErrorConsoleMessage(exception);
 
-            await Task.CompletedTask;
             Console.WriteLine("Stop OnError() in Host");
         }
 
@@ -61,7 +58,6 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
             await BotResponse.OnCommandStartMessage(message: message);
 
             Console.WriteLine("End OnMessage() in Host");
-            await Task.CompletedTask;
         }
     }
 }
