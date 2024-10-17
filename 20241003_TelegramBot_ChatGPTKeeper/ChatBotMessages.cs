@@ -9,7 +9,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         private const string FreeIndicator = "\ud83d\udfe9";
         public static string StartMessage(string currentUser) => $"Welcome { currentUser } in ChatGPT Keeper!\n<b>Developer is:</b> { DeveloperInfo }";
         public static string OccupyChatGptButtonText = $"{ BusyIndicator } Occupy ChatGPT { BusyIndicator }";
-        public static string ReleaseChatGptButtonText = "{ FreeIndicator } Release ChatGPT { FreeIndicator }";
+        public static string ReleaseChatGptButtonText = $"{ FreeIndicator } Release ChatGPT { FreeIndicator }";
         public static string ChatGptBusyMessage(string currentUser, int minutes) =>
             $"<b>ChatGPT is busy</b> with a nickname: {currentUser}.\nThe ChatGPT is { BusyIndicator }busy by: { minutes } minutes." +
             $"\n\n{ BusyIndicator }<b>ChatGPT is BUSY!</b>";
