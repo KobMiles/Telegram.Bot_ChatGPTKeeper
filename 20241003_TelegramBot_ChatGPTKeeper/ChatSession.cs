@@ -5,6 +5,8 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
     internal class ChatSession
     {
         private readonly TelegramBotHost _telegramBotHost;
+        private readonly ChatBotResponseHandler _chatBotResponseHandler;
+
         public string ActiveUser { get; private set; } = string.Empty;
 
         public bool IsSessionFree { get; private set; } = true;
@@ -12,9 +14,10 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         private DateTime _sessionStartTime;
         private TimeSpan _sessionDuration;
 
-        public ChatSession(TelegramBotHost telegramBotHost)
+        public ChatSession(TelegramBotHost telegramBotHost, ChatBotResponseHandler chatBotResponseHandler)
         {
             _telegramBotHost = telegramBotHost;
+            _chatBotResponseHandler = chatBotResponseHandler;
         }
 
         public async Task StartSession(CallbackQuery query)
@@ -26,35 +29,35 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 
             if (!IsSessionFree)
             {
-                await _telegramBotHost.BotResponse.NotifyCannotReleaseByOtherUser(query);
+                await _chatBotResponseHandler.NotifyCannotReleaseByOtherUser(query);
                 _sessionDuration = DateTime.Now - _sessionStartTime;
-                await _telegramBotHost.BotResponse.SendBusyChatSessionNotification(query, _sessionDuration.Minutes);
+                await _chatBotResponseHandler.SendBusyChatSessionNotification(query, _sessionDuration.Minutes);
                 return;
             }
 
-            await _telegramBotHost.BotResponse.AcknowledgeCallbackSelection(query);
+            await _chatBotResponseHandler.AcknowledgeCallbackSelection(query);
             _sessionStartTime = DateTime.Now;
             ActiveUser = query.From.ToString();
             IsSessionFree = false;
-            await _telegramBotHost.BotResponse.SendChatOccupiedMessage(query);
+            await _chatBotResponseHandler.SendChatOccupiedMessage(query);
         }
 
         public async Task StopSession(CallbackQuery query)
         {
             if (ActiveUser == query.From.ToString())
             {
-                await _telegramBotHost.BotResponse.AcknowledgeCallbackSelection(query);
+                await _chatBotResponseHandler.AcknowledgeCallbackSelection(query);
 
                 _sessionDuration = DateTime.Now - _sessionStartTime;
 
-                await _telegramBotHost.BotResponse.SendChatReleaseNotification(query, _sessionDuration.Minutes);
+                await _chatBotResponseHandler.SendChatReleaseNotification(query, _sessionDuration.Minutes);
                 ActiveUser = string.Empty;
                 IsSessionFree = true;
             }
 
             else if (ActiveUser != query.From.ToString())
             {
-                await _telegramBotHost.BotResponse.NotifyCannotReleaseByOtherUser(query);
+                await _chatBotResponseHandler.NotifyCannotReleaseByOtherUser(query);
             }
         }
 
