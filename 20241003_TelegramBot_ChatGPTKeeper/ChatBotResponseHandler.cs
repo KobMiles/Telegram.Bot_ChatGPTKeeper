@@ -33,8 +33,8 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
             if (message?.Text == "/start" || message?.Text == "/start@chatgptkeeper_bot")
             {
                 await _telegramBotClient.SendTextMessageAsync(message.Chat,
-                    $"{ ChatBotMessages.StartMessage(currentUser: message.From!.ToString()) }" +
-                    $"{_chatSession.IsGptFree() }",
+                    $"{ChatBotMessages.StartMessage(currentUser: message.From!.ToString())}" +
+                    $"{_chatSession.IsGptFree()}",
                     replyMarkup: ChatBotMessages.OccupyButtonMarkup,
                     parseMode: ParseMode.Html,
                     protectContent: true,
@@ -44,6 +44,11 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 
                 await Task.CompletedTask;
             }
+
+            //if (message?.Text == "/reset" || message?.Text == "/reset@chatgptkeeper_bot")
+            //{
+            //    await _chatSession.ResetSession(message);
+            //}
         }
 
         public async Task OnCallbackQueryMessage(Update update)
@@ -62,6 +67,14 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
                     await _chatSession.StopSession(query);
                 }
             }
+        }
+
+        public async Task SendChatResetNotification(Message message)
+        {
+            await _telegramBotClient.SendTextMessageAsync(message!.Chat, ChatBotMessages.ChatGptResetMessage(),
+                replyMarkup: ChatBotMessages.OccupyButtonMarkup,
+                parseMode: ParseMode.Html,
+                protectContent: true);
         }
 
         public async Task SendBusyChatSessionNotification(CallbackQuery query, int timeGptOccupyInMinutes)
