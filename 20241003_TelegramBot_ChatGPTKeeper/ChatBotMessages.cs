@@ -19,6 +19,10 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
             $"{FreeIndicator}<b>ChatGPT has been released!</b>\n<b>Statistic:</b>" +
             $"\nUser: {currentUser}\nTotal time in use: {minutes} minutes\n\n{FreeIndicator}<b>ChatGPT is FREE!</b>";
 
+        public static string ChatGptResetMessage() =>
+            $"{FreeIndicator}<b>ChatGPT has been reset!</b>\n<b>Statistic:</b>" +
+            $"\n\n{FreeIndicator}<b>ChatGPT is FREE!</b>";
+
         public static IReplyMarkup OccupyButtonMarkup =>
             new InlineKeyboardMarkup().AddButtons(OccupyChatGptButtonText);
 
