@@ -6,14 +6,12 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 {
     internal class ChatBotResponseHandler
     {
-        private readonly TelegramBotHost _telegramBotHost;
         private readonly ChatSession _chatSession;
         private readonly TelegramBotClient _telegramBotClient;
 
-        public ChatBotResponseHandler(TelegramBotClient telegramBotClient, TelegramBotHost telegramBotHost, ChatSession chatSession)
+        public ChatBotResponseHandler(TelegramBotClient telegramBotClient)
         {
-            _telegramBotHost = telegramBotHost;
-            _chatSession = chatSession;
+            _chatSession = new ChatSession(this);
             _telegramBotClient = telegramBotClient;
         }
 
