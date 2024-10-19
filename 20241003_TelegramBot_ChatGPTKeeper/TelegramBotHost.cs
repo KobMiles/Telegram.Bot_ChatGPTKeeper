@@ -2,21 +2,18 @@
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace _20241003_TelegramBot_ChatGPTKeeper
 {
     internal class TelegramBotHost
     {
         private readonly TelegramBotClient _bot;
-        private readonly ChatSession _userChatSession;
         private readonly ChatBotResponseHandler _responseHandler;
 
         public TelegramBotHost(string apiKey)
         {
             _bot = new TelegramBotClient(apiKey);
-            _responseHandler = new ChatBotResponseHandler(_bot, this, _userChatSession);
-            _userChatSession = new ChatSession(this, _responseHandler);
+            _responseHandler = new ChatBotResponseHandler(_bot);
         }
 
         public async Task Start()
