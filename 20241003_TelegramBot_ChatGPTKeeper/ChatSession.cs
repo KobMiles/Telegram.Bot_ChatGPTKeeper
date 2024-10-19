@@ -59,6 +59,13 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
             }
         }
 
+        public async Task ResetSession(Message message)
+        {
+            ActiveUser = string.Empty;
+            IsSessionFree = true;
+            await _chatBotResponseHandler.SendChatResetNotification(message);
+        }
+
         public string IsGptFree()
         {
             return IsSessionFree ? "\n\n\ud83d\udfe9Now GPT is free!\ud83d\udfe9.\nYou can take GPT:"
