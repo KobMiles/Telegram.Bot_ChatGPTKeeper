@@ -4,8 +4,12 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 {
     internal class ChatSession
     {
-        private readonly TelegramBotHost _telegramBotHost;
         private readonly ChatBotResponseHandler _chatBotResponseHandler;
+
+        public ChatSession(ChatBotResponseHandler chatBotResponseHandler)
+        {
+            _chatBotResponseHandler = chatBotResponseHandler;
+        }
 
         public string ActiveUser { get; private set; } = string.Empty;
 
@@ -13,12 +17,6 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
 
         private DateTime _sessionStartTime;
         private TimeSpan _sessionDuration;
-
-        public ChatSession(TelegramBotHost telegramBotHost, ChatBotResponseHandler chatBotResponseHandler)
-        {
-            _telegramBotHost = telegramBotHost;
-            _chatBotResponseHandler = chatBotResponseHandler;
-        }
 
         public async Task StartSession(CallbackQuery query)
         {
