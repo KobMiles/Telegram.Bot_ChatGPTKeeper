@@ -1,6 +1,6 @@
 ﻿using Telegram.Bot.Types.ReplyMarkups;
 
-namespace _20241003_TelegramBot_ChatGPTKeeper
+namespace _20241003_TelegramBot_ChatGPTKeeper.Messages
 {
     public static class ChatBotMessages
     {
