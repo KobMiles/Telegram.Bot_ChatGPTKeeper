@@ -1,8 +1,10 @@
-﻿using Telegram.Bot;
+﻿using _20241003_TelegramBot_ChatGPTKeeper.Core;
+using _20241003_TelegramBot_ChatGPTKeeper.Messages;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace _20241003_TelegramBot_ChatGPTKeeper
+namespace _20241003_TelegramBot_ChatGPTKeeper.Handlers
 {
     internal class ChatBotResponseHandler
     {
@@ -112,12 +114,12 @@ namespace _20241003_TelegramBot_ChatGPTKeeper
         public async Task NotifyCannotReleaseByOtherUser(CallbackQuery query)
         {
             await _telegramBotClient.AnswerCallbackQueryAsync(query.Id,
-                $"It is already occupied by { _chatSession.ActiveUser }");
+                $"It is already occupied by {_chatSession.ActiveUser}");
         }
 
         public async Task AcknowledgeCallbackSelection(CallbackQuery query)
         {
-            await _telegramBotClient.AnswerCallbackQueryAsync(query.Id, $"You picked { query.Data }");
+            await _telegramBotClient.AnswerCallbackQueryAsync(query.Id, $"You picked {query.Data}");
         }
     }
 }
