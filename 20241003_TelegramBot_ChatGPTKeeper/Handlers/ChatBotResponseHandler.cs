@@ -73,7 +73,9 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Handlers
 
         public async Task SendChatResetNotification(Message message)
         {
-            await _telegramBotClient.SendTextMessageAsync(message!.Chat, ChatBotMessages.ChatGptResetMessage(),
+            await _telegramBotClient.SendPhotoAsync(message.Chat,
+                "https://i.ibb.co/VNc5pfX/green-chat.png",
+                caption: ChatBotMessages.ChatGptResetMessage,
                 replyMarkup: ChatBotMessages.OccupyButtonMarkup,
                 parseMode: ParseMode.Html,
                 protectContent: true);
