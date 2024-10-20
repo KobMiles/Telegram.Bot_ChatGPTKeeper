@@ -47,10 +47,10 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Handlers
                 await Task.CompletedTask;
             }
 
-            //if (message?.Text == "/reset" || message?.Text == "/reset@chatgptkeeper_bot")
-            //{
-            //    await _chatSession.ResetSession(message);
-            //}
+            else if (message?.Text == "/reset" || message?.Text == "/reset@chatgptkeeper_bot")
+            {
+                await _chatSession.ResetSession(message);
+            }
         }
 
         public async Task OnCallbackQueryMessage(Update update)
