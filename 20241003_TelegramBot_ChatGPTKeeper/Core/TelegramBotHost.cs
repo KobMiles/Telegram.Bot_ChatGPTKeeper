@@ -1,9 +1,10 @@
-﻿using Telegram.Bot;
+﻿using _20241003_TelegramBot_ChatGPTKeeper.Handlers;
+using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace _20241003_TelegramBot_ChatGPTKeeper
+namespace _20241003_TelegramBot_ChatGPTKeeper.Core
 {
     internal class TelegramBotHost
     {

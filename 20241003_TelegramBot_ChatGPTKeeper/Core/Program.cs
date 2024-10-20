@@ -1,8 +1,8 @@
-﻿namespace _20241003_TelegramBot_ChatGPTKeeper
+﻿namespace _20241003_TelegramBot_ChatGPTKeeper.Core
 {
     internal class Program
     {
-        private static readonly TelegramBotHost ChatGptBot = new (Environment.GetEnvironmentVariable("TELEGRAM_API_KEY")
+        private static readonly TelegramBotHost ChatGptBot = new(Environment.GetEnvironmentVariable("TELEGRAM_API_KEY")
                                                                   ?? throw new ArgumentNullException("TELEGRAM_API_KEY not found"));
 
         private static async Task Main()

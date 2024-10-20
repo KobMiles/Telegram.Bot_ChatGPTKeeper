@@ -1,6 +1,7 @@
-﻿using Telegram.Bot.Types;
+﻿using _20241003_TelegramBot_ChatGPTKeeper.Handlers;
+using Telegram.Bot.Types;
 
-namespace _20241003_TelegramBot_ChatGPTKeeper
+namespace _20241003_TelegramBot_ChatGPTKeeper.Core
 {
     internal class ChatSession
     {
