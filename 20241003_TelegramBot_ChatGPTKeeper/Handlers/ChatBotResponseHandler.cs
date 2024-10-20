@@ -32,7 +32,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Handlers
 
         public async Task OnCommandStartMessage(Message message)
         {
-            if (message?.Text == "/start" || message?.Text == "/start@chatgptkeeper_bot")
+            if (message?.Text?.StartsWith("/start") == true)
             {
                 await _telegramBotClient.SendTextMessageAsync(message.Chat,
                     $"{ChatBotMessages.StartMessage(currentUser: message.From!.ToString())}" +
@@ -47,7 +47,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Handlers
                 await Task.CompletedTask;
             }
 
-            else if (message?.Text == "/reset" || message?.Text == "/reset@chatgptkeeper_bot")
+            else if (message?.Text?.StartsWith("/reset") == true)
             {
                 await _chatSession.ResetSession(message);
             }
