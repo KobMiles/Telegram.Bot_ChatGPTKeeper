@@ -1,45 +1,43 @@
 # Telegram.Bot_ChatGPTKeeper
 
-This project is a Telegram bot built using the `Telegram.Bot` library. It includes several components for managing chat sessions, responding to messages, and handling Telegram bot hosting. The bot is designed to track and manage interactions within a chat, maintaining session data and handling responses intelligently.
+This project is a custom-built Telegram bot using the `Telegram.Bot` library, designed to facilitate shared access to a ChatGPT Premium subscription among multiple users. The primary goal of the bot is to manage the availability of the ChatGPT session, ensuring that only one user at a time can use the session, thus avoiding overlapping interactions.
 
-## Features
+## Purpose
 
-- **Chat Session Management**:
-    - Handles individual chat sessions using the `ChatSession` class.
-    - Tracks the state of each chat and processes responses accordingly.
-- **Message Handling**:
-    - Processes and responds to bot commands and user messages via the `ChatBotResponseHandler`.
-    - Sends messages through the `MessageSender` class.
-- **Bot Hosting**:
-    - Manages bot startup and configuration using the `TelegramBotHost` class.
-    - Configured for deployment using Azure WebJobs.
+The bot is ideal for teams or groups who share a single ChatGPT Premium account. Without proper coordination, multiple users may attempt to use the account simultaneously, leading to confusion or interrupted conversations. This bot simplifies session management by allowing users to "occupy" or "release" the session. When a session is occupied, the bot informs others that ChatGPT is currently in use, helping users coordinate and make the most out of their shared subscription.
+
+## Key Features
+
+- **Session Occupation and Release**: 
+   - Users can "occupy" the ChatGPT session, indicating that they are actively using it.
+   - Once the session is finished, users can "release" it, making it available to others.
+   - The bot continuously tracks the session status and informs users if the session is free or busy.
+
+- **Real-Time Status Updates**:
+   - The bot provides real-time updates to all participants, letting everyone know the current status of the session (free or occupied).
+   - This ensures transparency and better coordination between users.
+
+- **Intuitive Interface**:
+   - Simple buttons for occupying or freeing the session, allowing users to interact easily without needing to type commands.
+   - Lightweight interface designed to be user-friendly.
+
+- **Flexible Hosting**:
+   - The bot is configured for deployment on cloud platforms such as Azure WebJobs, making it easy to host and maintain.
 
 ## Project Structure
 
 ```bash
 Telegram.Bot_ChatGPTKeeper/
-├── 20241003_TelegramBot_ChatGPTKeeper.sln    # Solution file
-├── 20241003_TelegramBot_ChatGPTKeeper/       # Main project folder
-│   ├── Core/                                 # Core functionality
-│   │   ├── ChatSession.cs                    # Manages individual chat sessions
-│   │   ├── Program.cs                        # Main entry point for the bot
-│   │   ├── TelegramBotHost.cs                # Initializes and configures the Telegram bot
-│   ├── Handlers/                             # Handles bot responses
-│   │   ├── ChatBotResponseHandler.cs         # Processes incoming messages and bot logic
-│   ├── Messages/                             # Message-related utilities
-│   │   ├── ChatBotMessages.cs                # Predefined messages sent by the bot
-│   ├── Services/                             # External services
-│   │   ├── MessageSender.cs                  # Sends messages through the bot
-│   ├── Configurations/                       # Configuration files
-│   │   ├── .filenesting.json                 # File nesting settings
-│   │   ├── nuget.config                      # NuGet configuration
-│   ├── Properties/                           # Additional project settings
-│   │   ├── ServiceDependencies/              # Service deployment files
-│   │   │   ├── profile.arm.json              # Web Deploy profile
-├── .github/workflows/                        # GitHub Actions workflows
-│   ├── master_chatgptkeepertelegrambot.yml   # CI/CD pipeline configuration for the bot
-├── .gitignore                                # Git ignore rules
-└── .gitattributes                            # Git attributes file
+├── Core/                                 # Core functionality
+│   ├── ChatSession.cs                    # Manages individual chat sessions
+│   ├── Program.cs                        # Main entry point for the bot
+│   ├── TelegramBotHost.cs                # Initializes and configures the Telegram bot
+├── Handlers/                             # Handles bot responses
+│   ├── ChatBotResponseHandler.cs         # Processes incoming messages and bot logic
+├── Messages/                             # Message-related utilities
+│   ├── ChatBotMessages.cs                # Predefined messages sent by the bot
+├── Services/                             # External services
+│   ├── MessageSender.cs                  # Sends messages through the bot
 ```
 
 ## Getting Started
