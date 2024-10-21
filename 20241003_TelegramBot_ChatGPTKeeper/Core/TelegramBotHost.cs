@@ -52,9 +52,9 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Core
         {
             Console.WriteLine("Start OnMessage() in Host");
 
-            await _responseHandler.OnMessageConsoleMessage(message: message);
+            _ = _responseHandler.OnMessageConsoleMessage(message: message);
 
-            await _responseHandler.OnCommandStartMessage(message: message);
+            await _responseHandler.OnCommandMessage(message: message);
 
             Console.WriteLine("End OnMessage() in Host");
         }
