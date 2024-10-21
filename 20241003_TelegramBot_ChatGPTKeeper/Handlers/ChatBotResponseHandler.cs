@@ -1,5 +1,6 @@
 ﻿using _20241003_TelegramBot_ChatGPTKeeper.Core;
 using _20241003_TelegramBot_ChatGPTKeeper.Messages;
+using _20241003_TelegramBot_ChatGPTKeeper.Services;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -30,26 +31,17 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Handlers
             await Task.CompletedTask;
         }
 
-        public async Task OnCommandStartMessage(Message message)
+        public async Task OnCommandMessage(Message message)
         {
             if (message?.Text?.StartsWith("/start") == true)
             {
-                await _telegramBotClient.SendTextMessageAsync(message.Chat,
-                    $"{ChatBotMessages.StartMessage(currentUser: message.From!.ToString())}" +
-                    $"{_chatSession.IsGptFree()}",
-                    replyMarkup: ChatBotMessages.OccupyButtonMarkup,
-                    parseMode: ParseMode.Html,
-                    protectContent: true,
-                    replyParameters: message.MessageId);
-
-                await _telegramBotClient.DeleteMessageAsync(message.Chat, message.MessageId);
-
-                await Task.CompletedTask;
+                await MessageSender.SendCommandStartMessage(_telegramBotClient, _chatSession, message);
             }
 
             else if (message?.Text?.StartsWith("/reset") == true)
             {
                 await _chatSession.ResetSession(message);
+                await MessageSender.SendChatResetMessage(_telegramBotClient, message);
             }
         }
 
@@ -69,16 +61,6 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Handlers
                     await _chatSession.StopSession(query);
                 }
             }
-        }
-
-        public async Task SendChatResetNotification(Message message)
-        {
-            await _telegramBotClient.SendPhotoAsync(message.Chat,
-                "https://i.ibb.co/VNc5pfX/green-chat.png",
-                caption: ChatBotMessages.ChatGptResetMessage,
-                replyMarkup: ChatBotMessages.OccupyButtonMarkup,
-                parseMode: ParseMode.Html,
-                protectContent: true);
         }
 
         public async Task SendBusyChatSessionNotification(CallbackQuery query, int timeGptOccupyInMinutes)
@@ -125,3 +107,4 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Handlers
         }
     }
 }
+
