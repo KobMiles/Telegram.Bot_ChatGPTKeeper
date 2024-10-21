@@ -65,6 +65,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Core
         {
             ActiveUser = string.Empty;
             IsSessionFree = true;
+            await Task.CompletedTask;
         }
 
         public string IsGptFree()
