@@ -76,7 +76,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Handlers
         public async Task SendChatOccupiedMessage(CallbackQuery query)
         {
             await _telegramBotClient.SendPhotoAsync(query.Message!.Chat,
-                "https://i.ibb.co/LzNDhPc/red-chat.png",
+                ChatBotMessages.RedChatOccupyImageUrl,
                 caption: ChatBotMessages.ChatGptOccupiedMessage(_chatSession.ActiveUser),
                 replyMarkup: ChatBotMessages.ReleaseButtonMarkup,
                 parseMode: ParseMode.Html,
@@ -87,7 +87,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Handlers
         public async Task SendChatReleaseNotification(CallbackQuery query, int timeGptOccupyInMinutes)
         {
             await _telegramBotClient.SendPhotoAsync(query.Message!.Chat,
-                "https://i.ibb.co/VNc5pfX/green-chat.png",
+                ChatBotMessages.GreenChatRealeseImageUrl,
                 caption: ChatBotMessages.ChatGptReleasedMessage(_chatSession.ActiveUser, timeGptOccupyInMinutes),
                 replyMarkup: ChatBotMessages.OccupyButtonMarkup,
                 parseMode: ParseMode.Html,
