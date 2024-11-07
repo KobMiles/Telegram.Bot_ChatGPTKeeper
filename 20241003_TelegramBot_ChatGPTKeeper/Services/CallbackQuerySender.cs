@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace _20241003_TelegramBot_ChatGPTKeeper.Services
+﻿namespace _20241003_TelegramBot_ChatGPTKeeper.Services
 {
     internal class CallbackQuerySender
     {
