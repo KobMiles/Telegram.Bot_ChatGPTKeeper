@@ -7,6 +7,10 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Messages
         private const string DeveloperInfo = "<b>Developer is:</b> @miles_ss.";
         private const string BusyIndicator = "\ud83d\udfe5";
         private const string FreeIndicator = "\ud83d\udfe9";
+
+        public const string GreenChatRealeseImageUrl = "https://i.ibb.co/VNc5pfX/green-chat.png";
+        public const string RedChatOccupyImageUrl = "https://i.ibb.co/VNc5pfX/green-chat.png";
+
         public static string StartMessage(string currentUser) => $"Welcome {currentUser} in ChatGPT Keeper!\n<b>Developer is:</b> {DeveloperInfo}";
         public const string OccupyChatGptButtonText = $"{BusyIndicator} Occupy ChatGPT {BusyIndicator}";
         public const string ReleaseChatGptButtonText = $"{FreeIndicator} Release ChatGPT {FreeIndicator}";
