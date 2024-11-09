@@ -10,7 +10,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Services
     {
         public static async Task SendCommandStartMessage(TelegramBotClient telegramBotClient, ChatSession chatSession, Message message)
         {
-            await telegramBotClient.SendTextMessageAsync(message.Chat,
+            await telegramBotClient.SendMessage(message.Chat,
             $"{ChatBotMessages.StartMessage(currentUser: message.From!.ToString())}" +
             $"{chatSession.IsGptFree()}",
             replyMarkup: ChatBotMessages.OccupyButtonMarkup,
@@ -18,13 +18,13 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Services
             protectContent: true,
             replyParameters: message.MessageId);
 
-            await telegramBotClient.DeleteMessageAsync(message.Chat, message.MessageId);
+            await telegramBotClient.DeleteMessage(message.Chat, message.MessageId);
         }
 
         public static async Task SendChatResetMessage(TelegramBotClient telegramBotClient ,Message message)
         {
-            await telegramBotClient.SendPhotoAsync(message.Chat,
-                "https://i.ibb.co/VNc5pfX/green-chat.png",
+            await telegramBotClient.SendPhoto(message.Chat,
+                ChatBotMessages.GreenChatRealeseImageUrl,
                 caption: ChatBotMessages.ChatGptResetMessage,
                 replyMarkup: ChatBotMessages.OccupyButtonMarkup,
                 parseMode: ParseMode.Html,
