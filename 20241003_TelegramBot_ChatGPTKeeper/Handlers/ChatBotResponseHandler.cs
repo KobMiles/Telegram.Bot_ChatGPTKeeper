@@ -40,7 +40,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Handlers
 
             else if (message?.Text?.StartsWith("/reset") == true)
             {
-                await _chatSession.ResetSession(message);
+                await _chatSession.ResetSession();
                 await MessageSender.SendChatResetMessage(_telegramBotClient, message);
             }
         }
@@ -53,7 +53,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Handlers
 
                 if (query.Data == ChatBotMessages.OccupyChatGptButtonText)
                 {
-                    await _telegramBotClient.AnswerCallbackQueryAsync(query.Id, $"You picked {query.Data}");
+                    await _telegramBotClient.AnswerCallbackQuery(query.Id, $"You picked {query.Data}");
                     await _chatSession.StartSession(query);
                 }
                 else if (query.Data == ChatBotMessages.ReleaseChatGptButtonText)
@@ -65,7 +65,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Handlers
 
         public async Task SendBusyChatSessionNotification(CallbackQuery query, int timeGptOccupyInMinutes)
         {
-            await _telegramBotClient.SendTextMessageAsync(query.Message!.Chat,
+            await _telegramBotClient.SendMessage(query.Message!.Chat,
                 ChatBotMessages.ChatGptBusyMessage(_chatSession.ActiveUser, timeGptOccupyInMinutes),
                 replyMarkup: ChatBotMessages.ReleaseButtonMarkup,
                 parseMode: ParseMode.Html,
@@ -75,8 +75,8 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Handlers
 
         public async Task SendChatOccupiedMessage(CallbackQuery query)
         {
-            await _telegramBotClient.SendPhotoAsync(query.Message!.Chat,
-                ChatBotMessages.RedChatOccupyImageUrl,
+            await _telegramBotClient.SendPhoto(query.Message!.Chat,
+                photo: ChatBotMessages.RedChatOccupyImageUrl,
                 caption: ChatBotMessages.ChatGptOccupiedMessage(_chatSession.ActiveUser),
                 replyMarkup: ChatBotMessages.ReleaseButtonMarkup,
                 parseMode: ParseMode.Html,
@@ -86,8 +86,8 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Handlers
 
         public async Task SendChatReleaseNotification(CallbackQuery query, int timeGptOccupyInMinutes)
         {
-            await _telegramBotClient.SendPhotoAsync(query.Message!.Chat,
-                ChatBotMessages.GreenChatRealeseImageUrl,
+            await _telegramBotClient.SendPhoto(query.Message!.Chat,
+                photo: ChatBotMessages.GreenChatRealeseImageUrl,
                 caption: ChatBotMessages.ChatGptReleasedMessage(_chatSession.ActiveUser, timeGptOccupyInMinutes),
                 replyMarkup: ChatBotMessages.OccupyButtonMarkup,
                 parseMode: ParseMode.Html,
@@ -97,13 +97,13 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Handlers
 
         public async Task NotifyCannotReleaseByOtherUser(CallbackQuery query)
         {
-            await _telegramBotClient.AnswerCallbackQueryAsync(query.Id,
+            await _telegramBotClient.AnswerCallbackQuery(query.Id,
                 $"It is already occupied by {_chatSession.ActiveUser}");
         }
 
         public async Task AcknowledgeCallbackSelection(CallbackQuery query)
         {
-            await _telegramBotClient.AnswerCallbackQueryAsync(query.Id, $"You picked {query.Data}");
+            await _telegramBotClient.AnswerCallbackQuery(query.Id, $"You picked {query.Data}");
         }
     }
 }
