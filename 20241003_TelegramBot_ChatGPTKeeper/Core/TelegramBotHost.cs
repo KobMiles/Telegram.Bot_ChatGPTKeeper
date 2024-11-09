@@ -19,7 +19,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Core
 
         public async Task Start()
         {
-            await _bot.DropPendingUpdatesAsync();
+            await _bot.DropPendingUpdates();
 
             _bot.OnUpdate += OnUpdate;
             _bot.OnMessage += OnMessage;
