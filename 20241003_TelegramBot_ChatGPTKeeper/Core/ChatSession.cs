@@ -60,7 +60,7 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Core
             }
         }
 
-        public async Task ResetSession(Message message)
+        public async Task ResetSession()
         {
             ActiveUser = string.Empty;
             IsSessionFree = true;
