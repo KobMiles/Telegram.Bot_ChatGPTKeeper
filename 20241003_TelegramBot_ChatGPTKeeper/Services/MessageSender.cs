@@ -30,5 +30,11 @@ namespace _20241003_TelegramBot_ChatGPTKeeper.Services
                 parseMode: ParseMode.Html,
                 protectContent: true);
         }
+
+        //public static async Task NotifyCannotReleaseByOtherUser(TelegramBotClient telegramBotClient, ChatSession chatSession, CallbackQuery query)
+        //{
+        //    await telegramBotClient.AnswerCallbackQuery(query.Id,
+        //        $"It is already occupied by {chatSession.ActiveUser}");
+        //}
     }
 }
